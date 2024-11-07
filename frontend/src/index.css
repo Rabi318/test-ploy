@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.dark body {
+  @apply bg-[#2f3349]; /* Dark mode styles */
+}
+.navbar {
+  /* Allows scrolling if needed */
+  transition: width 0.3s ease; /* Smooth transition for sidebar width */
+}
