@@ -27,8 +27,7 @@ function Footer() {
               className="w-24 h-24 object-contain mx-auto md:mx-0 rounded-lg"
             />
             <p className="text-[#8592A6] text-xs w-full md:text-left tracking-wide">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolor
-              perferendis officiis, ad eaque rem earum?
+              Your Rice, Our Commitment
             </p>
             <p className="mt-2 text-sm tracking-normal">GSTIN-12347huti9o</p>
             <p className="mt-2 text-sm tracking-normal">
