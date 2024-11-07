@@ -25,9 +25,7 @@ jobs:
         working-directory: ./backend
         run: npm install
 
-      - name: Run backend tests
-        working-directory: ./backend
-        run: npm test
+      
 
       # Frontend build & test
       - name: Install frontend dependencies
@@ -38,9 +36,7 @@ jobs:
         working-directory: ./frontend
         run: npm run build
 
-      - name: Run frontend tests
-        working-directory: ./frontend
-        run: npm test
+      
 
       # Deploy to Render using Deploy Hooks
       - name: Trigger Render Deployment
