@@ -3,7 +3,7 @@ import { HiMiniBuildingOffice2 } from "react-icons/hi2";
 import { IoMdCall } from "react-icons/io";
 import { MdEmail } from "react-icons/md";
 import { RiWhatsappFill } from "react-icons/ri";
-import heroImg from "../assets/Assets/Contact us.webp";
+import heroImg from "../assets/Assets/Contact.webp";
 
 const Contact = () => {
   return (
