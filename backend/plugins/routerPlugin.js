@@ -19,7 +19,7 @@ const RouterPlugin = {
           ));
           app.use(`/${configs.API_VERSION}/${route}`, router.default || router);
           console.log(
-            `http://${configs.HOST}:${configs.PORT}/${configs.API_VERSION}/${route}\n`
+            `${configs.HOST}:${configs.PORT}/${configs.API_VERSION}/${route}\n`
           );
         } catch (error) {
           console.error(`Error loading route ${filename}:`, error);
