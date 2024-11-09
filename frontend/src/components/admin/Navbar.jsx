@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoMenuSharp } from "react-icons/io5";
 import { IoCloseSharp } from "react-icons/io5";
 import { MdOutlineAnalytics } from "react-icons/md";
@@ -11,6 +11,7 @@ import { IoIosMoon } from "react-icons/io";
 import { BiLogOutCircle } from "react-icons/bi";
 import logo from "../../assets/Assets/alogo.svg";
 import { CiWheat } from "react-icons/ci";
+import defaultUserImg from "../../assets/userimg.jpeg";
 
 const Navbar = ({
   isDarkMode,
@@ -23,10 +24,38 @@ const Navbar = ({
   const [isHovered, setIsHovered] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const [userPhoto, setUserPhoto] = useState(defaultUserImg);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [currentPassword, setCurrentPassword] = useState("");
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("userData")); // Retrieve user data
+    if (userData && userData.photo) {
+      setUserPhoto(userData.photo); // Set user photo from localStorage
+    } else {
+      setUserPhoto(defaultUserImg); // Fallback to default image
+    }
+  }, []);
+
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
-
+  const toggleUserMenu = () => {
+    setIsUserMenuOpen(!isUserMenuOpen);
+  };
+  const changePasswordClick = () => {
+    setIsChangePasswordOpen(true);
+    setIsUserMenuOpen(false);
+  };
+  const closeChangePassword = () => {
+    setIsChangePasswordOpen(false);
+    setCurrentPassword("");
+    setNewPassword("");
+    setConfirmPassword("");
+  };
   const handleLogout = () => {
     localStorage.removeItem("aditya-token");
     localStorage.removeItem("userData");
@@ -37,6 +66,22 @@ const Navbar = ({
   const handleMobileMenuClick = () => {
     setIsOpen(false);
   };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (newPassword !== confirmPassword) {
+      setPasswordError("New password and confirm password do not match.");
+      return;
+    }
+  };
+  useEffect(() => {
+    if (passwordError) {
+      const timer = setTimeout(() => {
+        setPasswordError("");
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [passwordError]);
   return (
     <nav
       className={`
@@ -188,17 +233,128 @@ const Navbar = ({
               <IoSunnyOutline className="text-yellow-500" size={24} />
             )}
           </div>
-          <div className="border-2 rounded-full p-1">
+          <div
+            className="border-2 rounded-full p-1 cursor-pointer"
+            onClick={toggleUserMenu}
+          >
             <img
-              width="30"
-              height="30"
-              src="https://img.icons8.com/office/40/user.png"
+              src={userPhoto}
               alt="user"
-              className="rounded-full"
+              className="w-8 h-8 rounded-full object-cover"
             />
           </div>
+          {/* User Menu Card */}
+          {isUserMenuOpen && (
+            <div className="absolute top-12 right-4 bg-white dark:bg-gray-700 shadow-lg rounded-md p-2 w-40">
+              <div className="flex justify-between items-center">
+                <span className="font-semibold text-gray-800 dark:text-gray-200">
+                  Menu
+                </span>
+                <button
+                  onClick={() => setIsUserMenuOpen(false)}
+                  className="text-gray-700 hover:text-black dark:text-gray-300 dark:hover:text-white"
+                >
+                  &times;
+                </button>
+              </div>
+              <button
+                className="block w-full text-left text-sm px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 mt-2"
+                onClick={handleLogout}
+              >
+                Logout
+              </button>
+              <button
+                className="block text-sm w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600"
+                onClick={changePasswordClick}
+              >
+                Change Password
+              </button>
+            </div>
+          )}
         </div>
       </div>
+
+      {isChangePasswordOpen && (
+        <div className="fixed lg:hidden inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-lg max-w-lg w-full">
+            {/* Close button */}
+
+            <h2 className="text-2xl font-semibold mb-4 dark:text-white">
+              Change Password
+            </h2>
+            <form onSubmit={handleSubmit}>
+              <div className="mb-4">
+                <label
+                  className="block text-gray-700 dark:text-gray-200 mb-2"
+                  htmlFor="current-password"
+                >
+                  Your Password <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="password"
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  id="current-password"
+                  className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-800 dark:text-white"
+                  placeholder="Enter current password"
+                />
+              </div>
+
+              <div className="mb-4">
+                <label
+                  className="block text-gray-700 dark:text-gray-200 mb-2"
+                  htmlFor="new-password"
+                >
+                  New Password <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  id="new-password"
+                  className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-800 dark:text-white"
+                  placeholder="Enter new password"
+                />
+              </div>
+
+              <div className="mb-4">
+                <label
+                  className="block text-gray-700 dark:text-gray-200 mb-2"
+                  htmlFor="confirm-password"
+                >
+                  Confirm Password <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  id="confirm-password"
+                  className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-800 dark:text-white"
+                  placeholder="Re-enter new password"
+                />
+              </div>
+              {passwordError && (
+                <p className="text-red-500 text-sm mt-1">{passwordError}</p>
+              )}
+              <div className="flex justify-end space-x-4">
+                <button
+                  type="button"
+                  onClick={closeChangePassword}
+                  className="bg-gray-300 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-800 dark:text-white px-4 py-2 rounded-lg transition duration-200"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition duration-200"
+                >
+                  Change Password
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       {/* Mobile Menu - Shown when the menu is toggled open */}
       {isOpen && (
@@ -269,13 +425,6 @@ const Navbar = ({
             onClick={handleMobileMenuClick}
           >
             Expenses
-          </Link>
-          <Link
-            to="/admin/logout"
-            className="text-gray-700 hover:text-black dark:text-slate-100"
-            onClick={handleLogout}
-          >
-            Logout
           </Link>
         </div>
       )}
