@@ -21,7 +21,7 @@ const createAdmin = async (req, res) => {
         msg: "Username already in use",
       });
     }
-    const findAdmin3 = await Admin.findOne({ username: username });
+    const findAdmin3 = await Admin.findOne({ mobile: mobile });
     if (findAdmin3) {
       return res.status(409).json({
         success: false,
@@ -32,6 +32,8 @@ const createAdmin = async (req, res) => {
     const hashedPassword = await bcrypt.hash(otp, 10);
     const photo = req.files["photo"] ? req.files["photo"][0].path : null;
     const cloudPhoto = await uploadOnCloudinary(photo);
+
+    const sendMail = await setPasswordEmail(email, name, otp, username);
 
     const data = await Admin.create({
       name,
@@ -47,7 +49,7 @@ const createAdmin = async (req, res) => {
         msg: "Something went wrong",
       });
     }
-    const sendMail = await setPasswordEmail(email, name, otp);
+
     res.json({
       success: true,
       msg: "Successfully registered",
@@ -117,4 +119,130 @@ const loginAdmin = async (req, res) => {
     });
   }
 };
-module.exports = { createAdmin, loginAdmin };
+const changePassword = async (req, res) => {
+  try {
+    const { id, currentPassword, newPassword } = req.body;
+    const findAdmin = await Admin.findById(id);
+    if (!findAdmin) {
+      return res.status(404).json({
+        success: false,
+        msg: "Admin not Found",
+      });
+    }
+    const matchPassowrd = await bcrypt.compare(
+      currentPassword,
+      findAdmin.password
+    );
+    if (!matchPassowrd) {
+      return res.status(401).json({
+        success: false,
+        msg: "Invalid Password",
+      });
+    }
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    const data = await Admin.findByIdAndUpdate(
+      id,
+      { password: hashedPassword },
+      { new: true }
+    );
+    if (!data) {
+      return res.status(500).json({
+        success: false,
+        msg: "Something went wrong",
+      });
+    }
+    res.json({
+      success: true,
+      msg: "Password changed Successfully",
+      data: data,
+    });
+  } catch (error) {
+    console.log("Error====> ", error);
+    return res.status(500).json({
+      success: false,
+      msg: "Internal Server Error",
+    });
+  }
+};
+const getAllAdmins = async (req, res) => {
+  try {
+    const data = await Admin.find({ role: "admin" }).sort({ createdAt: -1 });
+    if (!data || data.length === 0) {
+      return res.status(404).json({
+        success: false,
+        msg: "No admins found",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      msg: "Successfully fetched admins",
+      data: data,
+    });
+  } catch (error) {
+    console.log("Error====> ", error);
+    return res.status(500).json({
+      success: false,
+      msg: "Internal Server Error",
+    });
+  }
+};
+const sendEmail = async (req, res) => {
+  try {
+    const { email, name, otp } = req.body;
+    const sendMail = await setPasswordEmail(email, name, otp);
+    if (!sendMail) {
+      return res.status(500).json({
+        success: false,
+        msg: "Something went wrong",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      msg: "Email sent successfully",
+    });
+  } catch (error) {
+    console.log("Error===> ", error);
+    return res.status(500).json({
+      success: false,
+      msg: "Internal Server Error",
+    });
+  }
+};
+const updateAdmin = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const findAdmin = await Admin.findById(id);
+    if (!findAdmin) {
+      return res.status(404).json({
+        success: false,
+        msg: "Admin not found",
+      });
+    }
+    const data = await Admin.findByIdAndUpdate(id, req.body, { new: true });
+    if (!data) {
+      return res.status(500).json({
+        success: false,
+        msg: "Something went wrong try again",
+      });
+    }
+    res.status(200).json({
+      success: true,
+      msg: "Successfully updated",
+      data: data,
+    });
+  } catch (error) {
+    console.log("Error===> ", error);
+    return res.status(500).json({
+      success: false,
+      msg: "Internal Server Error",
+    });
+  }
+};
+module.exports = {
+  createAdmin,
+  loginAdmin,
+  changePassword,
+  getAllAdmins,
+  sendEmail,
+  updateAdmin,
+};

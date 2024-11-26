@@ -1,3 +1,4 @@
+const Notification = require("../models/notificationModel");
 const Rice = require("../models/riceModel");
 const User = require("../models/userModel");
 const mongoose = require("mongoose");
@@ -28,6 +29,12 @@ const createRiceEntry = async (req, res) => {
         msg: "Something went wrong try again",
       });
     }
+    await Notification.create({
+      heading: "New Rice Entry",
+      message: `Rice Entry for ${findUser.firstName} ${findUser.lastName}`,
+      type: "rice",
+      riceId: data._id,
+    });
     res.status(200).json({
       success: true,
       msg: "Successfully created",

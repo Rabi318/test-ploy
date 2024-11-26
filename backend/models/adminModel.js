@@ -32,6 +32,10 @@ const adminSchema = new Schema(
     photo: {
       type: String,
     },
+    isBlock: {
+      type: Boolean,
+      default: false,
+    },
     permission: {
       userAdd: { type: Boolean, default: false },
       userUpdate: { type: Boolean, default: false },

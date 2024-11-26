@@ -1,3 +1,4 @@
+const Notification = require("../models/notificationModel");
 const Rice = require("../models/riceModel");
 const Transaction = require("../models/transactionModel");
 const User = require("../models/userModel");
@@ -23,6 +24,12 @@ const createUser = async (req, res) => {
         .status(500)
         .json({ success: false, msg: "Something went wrong try again" });
     }
+    await Notification.create({
+      heading: "New User Added",
+      message: `User ${firstName} from ${village} has been added`,
+      userId: data._id,
+      type: "user",
+    });
     res.json({
       success: true,
       msg: "Successfully created",
