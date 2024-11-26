@@ -318,6 +318,7 @@ const User = () => {
       }
     } finally {
       setLoading(false);
+      setAddUserError("");
     }
 
     // Log the data for debugging

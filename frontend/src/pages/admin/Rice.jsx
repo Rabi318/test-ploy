@@ -341,6 +341,7 @@ const Rice = () => {
                 </th>
               </tr>
             </thead>
+
             <tbody>
               {error ? (
                 <tr>

@@ -24,6 +24,7 @@ import NotFound from "./pages/NotFound.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx";
 import Rice from "./pages/admin/Rice.jsx";
 import RiceDetails from "./pages/admin/RiceDetails.jsx";
+import Notifications from "./pages/admin/Notifications.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -41,6 +42,7 @@ const router = createBrowserRouter(
           <Route path="role" element={<Role />} />
           <Route path="expenses" element={<Expenses />} />
           <Route path="rice" element={<Rice />} />
+          <Route path="notifications" element={<Notifications />} />
           {/* <Route path="rice/:userId" element={<RiceDetails />} /> */}
         </Route>
       </Route>

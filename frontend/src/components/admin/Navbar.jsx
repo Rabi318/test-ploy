@@ -12,6 +12,7 @@ import { BiLogOutCircle } from "react-icons/bi";
 import logo from "../../assets/Assets/alogo.svg";
 import { CiWheat } from "react-icons/ci";
 import defaultUserImg from "../../assets/userimg.jpeg";
+import { IoIosNotifications } from "react-icons/io";
 
 const Navbar = ({
   isDarkMode,
@@ -207,6 +208,21 @@ const Navbar = ({
               )}
             </Link>
           )}
+          {(userRole === "admin" || userRole === "superAdmin") && (
+            <Link
+              to="/admin/notifications"
+              className={`flex items-center text-gray-700 dark:hover:bg-gray-700 hover:bg-zinc-300 p-1 rounded-md ${
+                location.pathname === "/admin/notifications"
+                  ? "bg-[#665dd0] text-white"
+                  : ""
+              }`}
+            >
+              <IoIosNotifications size={24} className="dark:text-[#b6b5cc]" />
+              {isSidepannel && (
+                <span className="ml-2 dark:text-[#b6b5cc]">Notifications</span>
+              )}
+            </Link>
+          )}
 
           <button
             onClick={handleLogout}
@@ -245,7 +261,7 @@ const Navbar = ({
           </div>
           {/* User Menu Card */}
           {isUserMenuOpen && (
-            <div className="absolute top-12 right-4 bg-white dark:bg-gray-700 shadow-lg rounded-md p-2 w-40">
+            <div className="absolute top-12 right-4 bg-white dark:bg-gray-700 shadow-lg rounded-md p-2 w-40 z-50">
               <div className="flex justify-between items-center">
                 <span className="font-semibold text-gray-800 dark:text-gray-200">
                   Menu
@@ -268,6 +284,9 @@ const Navbar = ({
                 onClick={changePasswordClick}
               >
                 Change Password
+              </button>
+              <button className="block text-sm w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600">
+                Change Profile
               </button>
             </div>
           )}
@@ -379,6 +398,7 @@ const Navbar = ({
                 ? "bg-[#665dd0] text-white"
                 : ""
             }`}
+            onClick={handleMobileMenuClick}
           >
             Analytics
           </Link>
@@ -425,6 +445,17 @@ const Navbar = ({
             onClick={handleMobileMenuClick}
           >
             Expenses
+          </Link>
+          <Link
+            to="/admin/rice"
+            className={`text-gray-700 hover:text-black dark:text-slate-100 p-1 rounded-md ${
+              location.pathname === "/admin/rice"
+                ? "bg-[#665dd0] text-white"
+                : ""
+            }`}
+            onClick={handleMobileMenuClick}
+          >
+            Rice
           </Link>
         </div>
       )}

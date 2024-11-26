@@ -235,7 +235,7 @@ function Footer() {
               <div className="md:flex-1 md:text-right text-center md:px-4">
                 <span className="text-gray-500">Design & Developed by</span>
                 <a
-                  href="https://www.webbocket.com/"
+                  href="https://bitfusion-mu.vercel.app/"
                   className="text-[#62BC00] cursor-pointer hover:underline"
                   target="_blank"
                   rel="noopener noreferrer"
